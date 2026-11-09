@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Where aged care places are falling behind</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>Aged care places</strong>
+      <span>Australia · figures as at 30 June 2025</span>
+    </div>
+    <nav class="tabs" aria-label="Pages">
+      <button type="button" data-tab="overview" class="is-on" aria-selected="true">Overview</button>
+      <button type="button" data-tab="regions" aria-selected="false">Regions map</button>
+      <button type="button" data-tab="hospitals" aria-selected="false">Hospitals &amp; waiting</button>
+      <button type="button" data-tab="outlook" aria-selected="false">2031 outlook</button>
+      <button type="button" data-tab="action" aria-selected="false">What to do</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="banner">
+      <p class="kicker">30 June 2025 supply, read on 10 November 2026 (AEDT)</p>
+      <h1 id="banner">Loading the latest figures…</h1>
+    </section>
+    <section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+    <section data-page="overview">
+      <article class="card">
+        <h2 id="overview-hero-title">Places per 1,000 people aged 70+ have slipped below the planning benchmark</h2>
+        <p class="sub" id="overview-hero-sub"></p>
+        <canvas id="chart-ratio" height="320"></canvas>
+      </article>
+      <div class="grid-2">
+        <article class="card">
+          <h2 id="overview-net-title">New operational places have slowed to a trickle</h2>
+          <p class="sub">Counted change in operational residential places, 30 June to 30 June. The reported national need is about 10,600 a year.</p>
+          <canvas id="chart-net" height="320"></canvas>
+        </article>
+        <article class="card">
+          <h2>Every state is now under 78 places per 1,000</h2>
+          <p class="sub">Operational residential places per 1,000 people aged 70+, 30 June 2025. The line is the planning benchmark.</p>
+          <canvas id="chart-states" height="320"></canvas>
+        </article>
+      </div>
+      <div class="means" id="overview-means"></div>
+      <details class="exact">
+        <summary>Exact values — national series</summary>
+        <div class="table-wrap" id="overview-table"></div>
+      </details>
+    </section>
+
+    <section data-page="regions" hidden>
+      <div class="card">
+        <h2>Where the residential place ratio is lowest</h2>
+        <p class="sub">Each region is coloured by the Department of Health published ratio of operational residential places per 1,000 people aged 70+, 30 June 2025. Hover a region for the place count and the gap to 78.</p>
+        <div class="pills" id="state-pills" role="group" aria-label="Filter by state"></div>
+        <div class="map-wrap"><svg id="map" viewBox="0 0 1000 820" role="img" aria-label="Map of aged care planning regions"></svg></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <h2 id="region-bar-title">Biggest gaps in number of places</h2>
+          <p class="sub">Places still needed to reach 78 per 1,000, using each region’s published ratio. A large city can have a moderate ratio and still be missing the most places.</p>
+          <canvas id="chart-regions" height="320"></canvas>
+        </article>
+        <div>
+          <div class="means" id="region-means"></div>
+        </div>
+      </div>
+      <details class="exact">
+        <summary>Exact values — every planning region</summary>
+        <div class="table-wrap" id="region-table"></div>
+      </details>
+    </section>
+
+    <section data-page="hospitals" hidden>
+      <article class="card">
+        <p class="kicker" style="color:#ff8a5b;letter-spacing:.06em;text-transform:uppercase;font-size:.75rem;">Reported by the ABC, not counted in this dataset</p>
+        <p class="quote" id="hospital-quote"></p>
+      </article>
+      <div class="grid-2">
+        <article class="card">
+          <h2>South Australia’s place ratio has fallen the whole decade</h2>
+          <p class="sub">Operational residential places per 1,000 people aged 70+. South Australia added few places while the older population grew.</p>
+          <canvas id="chart-sa" height="320"></canvas>
+        </article>
+        <article class="card">
+          <h2>South Australia is not the lowest ratio</h2>
+          <p class="sub">30 June 2025. The Northern Territory, the ACT and Tasmania have fewer places per 1,000 older people. South Australia’s hospital queue is the one state governments have put a number on.</p>
+          <canvas id="chart-hospital-states" height="320"></canvas>
+        </article>
+      </div>
+      <div class="means" id="hospital-means"></div>
+      <details class="exact">
+        <summary>Exact values — South Australia by year</summary>
+        <div class="table-wrap" id="hospital-table"></div>
+      </details>
+    </section>
+
+    <section data-page="outlook" hidden>
+      <article class="card">
+        <h2 id="outlook-title">Extra places each year to 2031, if today’s homes stay open</h2>
+        <p class="sub">ABS medium population projection (series B). “Hold today’s ratio” keeps each state’s June 2025 ratio. “Reach 78” gets to the planning benchmark by 30 June 2031.</p>
+        <canvas id="chart-outlook" height="320"></canvas>
+      </article>
+      <article class="card">
+        <h2>The 70+ population keeps growing after the place ratio has already fallen</h2>
+        <p class="sub">ABS estimated resident population to 2025, then the medium projection’s growth applied to that estimate through 2031. Australia.</p>
+        <canvas id="chart-pop" height="320"></canvas>
+      </article>
+      <div class="means" id="outlook-means"></div>
+      <details class="exact">
+        <summary>Exact values — 2031 by state</summary>
+        <div class="table-wrap" id="outlook-table"></div>
+      </details>
+    </section>
+
+    <section data-page="action" hidden>
+      <article class="card">
+        <h2>The pace last year is about a tenth of what it takes to stand still</h2>
+        <p class="sub">Australia, residential operational places a year. Blue bars are reported claims. The others are counted from the stocktake and the ABS projection.</p>
+        <canvas id="chart-pace" class="tall" height="420"></canvas>
+      </article>
+      <div class="steps" id="action-steps"></div>
+      <div class="means" id="action-means"></div>
+      <details class="exact">
+        <summary>Exact values — pace comparison</summary>
+        <div class="table-wrap" id="action-table"></div>
+      </details>
+    </section>
+  </main>
+
+  <div id="tip" class="tip" hidden></div>
+
+  <footer class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li>Department of Health, Disability and Ageing, Stocktake of Australian Government Subsidised Aged Care Places, 30 June 2015 to 30 June 2025, published on GEN Aged Care Data. Operational residential places and the Department’s published ratios. Creative Commons BY 4.0, via the GEN website copyright notice.</li>
+      <li>Department of Health, Disability and Ageing, Aged care service list, Australia, 30 June 2021 to 30 June 2025, on GEN. Creative Commons BY 4.0.</li>
+      <li>Australian Institute of Health and Welfare, GEN data: providers, services and places in aged care, 30 June 2008 to 30 June 2025. Creative Commons BY 4.0. Used as a cross-check. These files do not identify individual services.</li>
+      <li>Australian Bureau of Statistics, Estimated Resident Population by state, sex and single year of age, 30 June, Data API dataflow ERP_Q. Creative Commons Attribution 4.0 International.</li>
+      <li>Australian Bureau of Statistics, Population Projections, Australia, 2022 base to 2071, series 29 (medium / series B), Tables B1–B9. Creative Commons Attribution 4.0 International. The state series is not in the national API dataflow, so it is taken from these spreadsheets.</li>
+      <li>Department of Health 2018 Aged Care Planning Region boundaries, via the AIHW public map service, simplified for this page. Indian Ocean Territories is in the stocktake and not on the map.</li>
+      <li>Hospital waits and the “10,600 a year” and “800 beds” figures: ABC News, 9 November 2026, and ABC Radio National Breakfast, 10 November 2026, 7:30 am AEDT. They are quoted, not calculated here.</li>
+    </ul>
+    <p>Places are operational residential places, including flexible residential places in Multi-Purpose Services. They are not occupied beds, staffed beds or vacancies. Home care packages are mostly assigned to people, not to services, and are not in these residential counts. Prepared for a public briefing. Pipeline notes live in the project README, not on this page.</p>
+  </footer>
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
