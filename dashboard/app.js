@@ -68,15 +68,47 @@
     return `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
   }
 
+  const STATUS_PILL = { red: "Behind", amber: "Watch", green: "On track" };
+  const SHORT_TAKE = [
+    "Behind the benchmark of 78 per 1,000.",
+    "Places still short of that benchmark today.",
+    "Counted rise last year, against about 10,600 needed.",
+    "Each year to 2031 just to hold today's ratio.",
+    "The region with the largest place gap.",
+  ];
+
+  function fillBanner() {
+    const latest = latestNational();
+    const earlier = MARTS.national_series.find((row) => row.year === 2015);
+    const outlook = ausOutlook();
+    document.getElementById("banner").textContent =
+      `Australia is ${n(latest.shortfall_vs_78)} aged care places short, and added just ${n(latest.net_operational_places)} last year against ~10,600 needed.`;
+    document.getElementById("banner-sub").textContent =
+      `That is ${n(latest.per_1000_70, 1)} places per 1,000 people aged 70+, down from ${n(earlier.per_1000_70, 1)} in 2015. ` +
+      `Reaching 78 by 2031 would take about ${n(outlook.annual_extra_to_reach_78)} extra places a year.`;
+  }
+
   function fillKpis() {
     const host = document.getElementById("kpis");
-    host.innerHTML = MARTS.kpis.map((kpi) => `
+    host.innerHTML = MARTS.kpis.map((kpi, index) => `
       <article class="kpi ${kpi.status}">
-        <p class="label">${kpi.label}</p>
+        <div class="kpi-top">
+          <p class="label">${kpi.label}</p>
+          <span class="pill">${STATUS_PILL[kpi.status] || "Watch"}</span>
+        </div>
         <p class="value">${kpi.value}</p>
         <p class="unit">${kpi.unit}</p>
-        <p class="take">${kpi.takeaway}</p>
+        <p class="take">${SHORT_TAKE[index] || kpi.takeaway}</p>
       </article>`).join("");
+    document.getElementById("kpi-notes-body").innerHTML = table(
+      ["Card", "Value", "Status", "Detail"],
+      MARTS.kpis.map((kpi) => [
+        kpi.label,
+        kpi.value,
+        STATUS_PILL[kpi.status] || "Watch",
+        kpi.takeaway,
+      ])
+    );
   }
 
   function renderOverview() {
@@ -521,7 +553,7 @@
     ]);
     MARTS = marts;
     GEO = geo;
-    document.getElementById("banner").textContent = marts.headline;
+    fillBanner();
     fillKpis();
     document.querySelectorAll("[data-tab]").forEach((button) => {
       button.addEventListener("click", () => show(button.dataset.tab));
