@@ -1,0 +1,29 @@
+name: agedcare.cdc.envelope
+version: 1
+description: >
+  Debezium JSON envelope for a row in the aged care service registry.
+  schemas.enable is false, so the message is the envelope itself.
+schema:
+  type: object
+  required: [op, source]
+  additionalProperties: true
+  properties:
+    op:
+      type: string
+      enum: [c, u, d, r]
+    ts_ms:
+      type: [integer, "null"]
+    before:
+      type: [object, "null"]
+    after:
+      type: [object, "null"]
+    source:
+      type: object
+      required: [table]
+      properties:
+        table:
+          type: string
+        db:
+          type: string
+        schema:
+          type: string
