@@ -1,0 +1,18 @@
+[project]
+name = "aged-care-bed-block"
+version = "0.1.0"
+description = "Where residential aged care supply is falling behind Australia's older population."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
