@@ -1,0 +1,15 @@
+{
+  "provider_inserts": 1775,
+  "service_inserts": 7665,
+  "service_updates": 11107,
+  "service_deletes": 2287,
+  "place_inserts": 27605,
+  "years": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "rows_touched": 50439
+}

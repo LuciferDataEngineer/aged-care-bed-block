@@ -1,0 +1,29 @@
+{
+  "measured_on": "this machine, local[2], not a cloud cluster",
+  "incremental_cdc": {
+    "bronze_stream_seconds": 8.204,
+    "bronze_rows": 63726,
+    "bronze_files": 3,
+    "merge_seconds": 4.426,
+    "merge_rows_touched": 7554,
+    "merge_files": 4,
+    "current_services": 5378,
+    "residential_places": 228259,
+    "scd2_rows": 24528,
+    "scd2_seconds": 0.591,
+    "scd2_files": 2
+  },
+  "full_reload": {
+    "seconds": 7.382,
+    "rows_touched": 27605,
+    "current_rows": 5378,
+    "files": 5,
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  }
+}
