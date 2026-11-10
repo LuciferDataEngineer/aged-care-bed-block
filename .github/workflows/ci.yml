@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: ruff check src tests
+      - name: Unit tests and contracts
+        run: pytest -q tests/unit && python -m agedcare.contracts
+        env:
+          PYTHONPATH: src
+
+  cdc-lakehouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Start Postgres, Redpanda and Debezium
+        run: docker compose -p agedcare -f docker-compose.yml up -d
+      - name: Replay the service lists into Postgres
+        run: python -m agedcare.oltp
+        env:
+          PYTHONPATH: src
+      - name: Spark CDC merge into Delta
+        run: python -m agedcare.lakehouse
+        env:
+          PYTHONPATH: src
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+      - name: Integration test
+        run: pytest -q tests/integration
+        env:
+          PYTHONPATH: src
+      - name: Stop the stack
+        if: always()
+        run: docker compose -p agedcare -f docker-compose.yml down -v
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+      - name: Validate the local CDC stack description
+        working-directory: infra/terraform
+        run: |
+          terraform init -backend=false
+          terraform validate

@@ -1,0 +1,34 @@
+name: gold.supply_gap_state
+version: 1
+description: >
+  One row per state or Australia and 30 June year. Operational residential
+  places, ABS population aged 70+ and 80+, and the gap to 78 places per 1,000.
+schema:
+  type: object
+  required:
+    - year
+    - state_code
+    - operational_residential_places
+    - pop_70_plus
+    - per_1000_70
+    - shortfall_vs_78
+  additionalProperties: true
+  properties:
+    year:
+      type: integer
+      minimum: 2015
+      maximum: 2025
+    state_code:
+      type: string
+      enum: [NSW, VIC, QLD, WA, SA, TAS, ACT, NT, AUS]
+    operational_residential_places:
+      type: integer
+      minimum: 0
+    pop_70_plus:
+      type: number
+      exclusiveMinimum: 0
+    per_1000_70:
+      type: number
+      minimum: 0
+    shortfall_vs_78:
+      type: number

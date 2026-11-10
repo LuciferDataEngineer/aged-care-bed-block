@@ -1,0 +1,7 @@
+{
+  "op": "u",
+  "ts_ms": 1710000000000,
+  "before": {"service_id": "abc", "residential_places": 40},
+  "after": {"service_id": "abc", "residential_places": 55},
+  "source": {"table": "services", "db": "agedcare", "schema": "registry"}
+}

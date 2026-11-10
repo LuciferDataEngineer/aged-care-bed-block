@@ -1,0 +1,72 @@
+# Host networking so the services can reach each other on Linux runners where
+# container-bridge traffic is unreliable. Postgres, Redpanda and Debezium all
+# use 127.0.0.1. Spark on the host uses the same address.
+
+services:
+  postgres:
+    image: postgres:16
+    network_mode: host
+    environment:
+      POSTGRES_USER: agedcare
+      POSTGRES_PASSWORD: agedcare
+      POSTGRES_DB: agedcare
+    command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=4", "-c", "max_wal_senders=4"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/oltp/001_schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agedcare -d agedcare"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.18
+    network_mode: host
+    command:
+      - redpanda
+      - start
+      - --kafka-addr
+      - 0.0.0.0:9092
+      - --advertise-kafka-addr
+      - 127.0.0.1:9092
+      - --pandaproxy-addr
+      - 0.0.0.0:8082
+      - --advertise-pandaproxy-addr
+      - 127.0.0.1:8082
+      - --schema-registry-addr
+      - 0.0.0.0:8081
+      - --rpc-addr
+      - 0.0.0.0:33145
+      - --advertise-rpc-addr
+      - 127.0.0.1:33145
+      - --mode
+      - dev-container
+      - --smp
+      - "1"
+      - --memory
+      - 768M
+      - --overprovisioned
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 10s
+
+  debezium:
+    image: quay.io/debezium/server:2.7.3.Final
+    network_mode: host
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
+    restart: on-failure
+    volumes:
+      - ./cdc/debezium/application.properties:/debezium/config/application.properties:ro
+      - debezium-data:/debezium/data
+
+volumes:
+  pgdata:
+  debezium-data:
